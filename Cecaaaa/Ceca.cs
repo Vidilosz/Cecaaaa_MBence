@@ -15,19 +15,19 @@ namespace ConsoleApp4
         string nev;
         string fajta;
         string szin;
-        int rendetlenségSzint;
+        int rendetlensegSzint;
         bool ehes;
         string nem;
         int fogyasztas;
 
-        public Ceca(int kor, int suly, string nev, string fajta, string szin, int rendetlenségSzint, string nem, int fogyasztas)
+        public Ceca(int kor, int suly, string nev, string fajta, string szin, int rendetlensegSzint, string nem, int fogyasztas)
         {
             this.kor = kor;
             this.suly = suly;
             this.nev = nev;
             this.fajta = fajta;
             this.szin = szin;
-            this.rendetlenségSzint = rendetlenségSzint;
+            this.rendetlensegSzint = rendetlensegSzint;
             this.nem = nem;
             this.fogyasztas = fogyasztas;
             ehes = true;
@@ -41,7 +41,7 @@ namespace ConsoleApp4
             {
                 szin = "zöld";
                 suly -= (int)(suly * (esely / 100.0));
-                rendetlenségSzint /= 2;
+                rendetlensegSzint /= 2;
             }
             else
             {
@@ -52,7 +52,7 @@ namespace ConsoleApp4
         }
         public void Alvas()
         {
-            rendetlenségSzint = 0;
+            rendetlensegSzint = 0;
 
             if (szin == "zöld")
             {
@@ -62,21 +62,53 @@ namespace ConsoleApp4
 
         public void Ebredes()
         {
-            rendetlenségSzint = 100;
+            rendetlensegSzint = 100;
             ehes = true;
         }
 
         public void Jatek()
         {
-
-            if (rendetlenségSzint == 0)
+            if (rendetlensegSzint == 0)
             {
                 Alvas();
+                return;
             }
-            else
-            {
 
+            List<string> tevekenysegek = new List<string> { "ugral", "kapar", "kerget" };
+            if (rendetlensegSzint > 50)
+            {
+                tevekenysegek.Add("bútorra mászik");
             }
+            if (rendetlensegSzint > 80)
+            {
+                tevekenysegek.Add("romlott ételt eszik");
+            }
+
+            string kivalasztottTevekenyseg = tevekenysegek[random.Next(tevekenysegek.Count)];
+            Console.WriteLine($"{nev} most {kivalasztottTevekenyseg}.");
+
+            if (kivalasztottTevekenyseg == "romlott ételt eszik")
+            {
+                Eves(0.5);
+            }
+
+            rendetlensegSzint -= random.Next(5, 16);
+            if (rendetlensegSzint < 0) rendetlensegSzint = 0;
+        }
+
+        private int MaxRendetlensegSzint()
+        {
+            int maxSzint = 100 - (kor * 2);
+            if (szin == "narancssárga")
+            {
+                maxSzint += 10;
+            }
+            return Math.Max(maxSzint, 20);
+        }
+
+        public void HangotAd()
+        {
+            Console.WriteLine($"{nev} nyávog egyet.");
         }
     }
 }
